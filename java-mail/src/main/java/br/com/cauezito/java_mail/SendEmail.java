@@ -53,7 +53,7 @@ public class SendEmail {
 			message.setFrom(new InternetAddress(user, sender));
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject(subject);
-			message.setContent(textBody, "text/html");
+			message.setContent(textBody, "text/html; charset=utf-8");
 			Transport.send(message);
 		}catch (Exception e) {
 			e.printStackTrace();
