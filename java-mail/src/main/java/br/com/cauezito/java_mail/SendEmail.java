@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -33,8 +35,8 @@ public class SendEmail {
 	private String sender = "";
 	private String subject = "";
 	private String text = "";
-	
-	
+
+
 	public SendEmail(String recipients, String sender,String subject, String textBody) {
 		this.recipients = recipients;
 		this.sender = sender;
@@ -52,7 +54,7 @@ public class SendEmail {
 		properties.put("mail.smtp.port", "465"); /*Porta do servidor*/
 		properties.put("mail.smtp.socketFactory.port", "465"); /*Especifica a porta a ser conectada pelo socket*/
 		properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); /*Classe socket de conexão ao smtp*/
-		
+
 		return properties;
 	}
 
@@ -76,7 +78,7 @@ public class SendEmail {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendWithFile() {
 		try {
 			Session session = Session.getInstance(this.configSMTP(), new Authenticator() {
@@ -91,38 +93,47 @@ public class SendEmail {
 			message.setFrom(new InternetAddress(user, sender));
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject(subject);
-			
+
 			MimeBodyPart bodyEmail = new MimeBodyPart();
 			bodyEmail.setContent(text, "text/html; charset=utf8");
-			
-			MimeBodyPart attachmentEmail = new MimeBodyPart();
-			attachmentEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(this.simulatePDF(), "application/pfd")));
-			attachmentEmail.setFileName("email.pdf");
-			
+
+			List<FileInputStream> files = new ArrayList<FileInputStream>();
+			files.add(this.simulatePDF());
+			files.add(this.simulatePDF());
+			files.add(this.simulatePDF());
+
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(bodyEmail);
-			multipart.addBodyPart(attachmentEmail);
 			
+			int i = 1;
+			for (FileInputStream file : files) {
+				MimeBodyPart attachmentEmail = new MimeBodyPart();
+				attachmentEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(file, "application/pfd")));
+				attachmentEmail.setFileName("email" +i+".pdf");			
+				multipart.addBodyPart(attachmentEmail);
+				i++;
+			}
+
 			message.setContent(multipart);
 			Transport.send(message);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private FileInputStream simulatePDF() {				
-			try {
-				Document document = new Document();
-				File file = new File("fileTestEmail.pdf");
-				file.createNewFile();
-				PdfWriter.getInstance(document, new FileOutputStream(file));
-				document.open();
-				document.add(new Paragraph("Content"));
-				document.close();
-				return new FileInputStream(file);
-			} catch (IOException | DocumentException e) {
-				e.printStackTrace();
-				return null;
-			}		
+		try {
+			Document document = new Document();
+			File file = new File("fileTestEmail.pdf");
+			file.createNewFile();
+			PdfWriter.getInstance(document, new FileOutputStream(file));
+			document.open();
+			document.add(new Paragraph("Content"));
+			document.close();
+			return new FileInputStream(file);
+		} catch (IOException | DocumentException e) {
+			e.printStackTrace();
+			return null;
+		}		
 	}
 }
