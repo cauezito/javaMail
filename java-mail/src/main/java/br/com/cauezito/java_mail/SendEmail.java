@@ -1,7 +1,6 @@
 package br.com.cauezito.java_mail;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class SendEmail {
 
-	private String user = "developer.test9627@gmail.com";
-	private String password = "134679caa";
+	private String user = "";
+	private String password = "";
 	private String recipients = "";
 	private String sender = "";
 	private String subject = "";
