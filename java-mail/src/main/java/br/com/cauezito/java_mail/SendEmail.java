@@ -1,4 +1,9 @@
 package br.com.cauezito.java_mail;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -9,6 +14,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class SendEmail {
 
@@ -58,5 +68,21 @@ public class SendEmail {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private FileInputStream simulatePDF() {				
+			try {
+				Document document = new Document();
+				File file = new File("fileTestEmail.pdf");
+				file.createNewFile();
+				PdfWriter.getInstance(document, new FileOutputStream(file));
+				document.open();
+				document.add(new Paragraph("Content"));
+				document.close();
+				return new FileInputStream(file);
+			} catch (IOException | DocumentException e) {
+				e.printStackTrace();
+				return null;
+			}		
 	}
 }
