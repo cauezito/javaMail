@@ -13,7 +13,8 @@ public class AppTest {
 			bodyEmail.append("<h2>Oi!</h2> <br/><br/>");
 			bodyEmail.append("Você está recebendo um <b>e-mail de teste.</b>");
 			SendEmail sendEmail = new SendEmail("nokylevs@gmail.com", "Cauê", "Teste!", bodyEmail.toString());
-			sendEmail.send();
+			//sendEmail.sendWithFile("application/pdf");
+			sendEmail.sendWithFile();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
