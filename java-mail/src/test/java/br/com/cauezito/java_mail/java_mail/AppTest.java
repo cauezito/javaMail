@@ -23,6 +23,7 @@ public class AppTest {
 		try {
 			/*configs SMTP*/
 			Properties properties = new Properties();
+			properties.put("mail.smtp.ssl.trust", "*");
 			properties.put("mail.smtp.auth", "true"); /*Autorização*/
 			properties.put("mail.smtp.starttls", "true"); /*Autenticação*/
 			properties.put("mail.smtp.host", "smtp.gmail.com"); /*Servidor gmail*/
@@ -40,7 +41,7 @@ public class AppTest {
 			
 			Address[] toUser = InternetAddress.parse(""); //add e-mails 
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user));
+			message.setFrom(new InternetAddress(user, "Cauê Santos"));
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject("E-mail de teste.");
 			message.setContent("Deu tudo certo!", "text/html");
